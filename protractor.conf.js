@@ -8,7 +8,7 @@ exports.config = {
   onPrepare: () => {  
       let jasmineReporters = require('jasmine-reporters');
       let junitReporter = new jasmineReporters.JUnitXmlReporter({
-        savePath: '/e2e',
+        savePath: 'endtoend',
         consolidateAll: false
       });
       jasmine.getEnv().addReporter(junitReporter);
