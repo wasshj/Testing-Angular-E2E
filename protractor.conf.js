@@ -33,7 +33,7 @@ exports.config = {
       args: (process.env.IS_CIRCLE ? ['--headless'] : [])
     }
   },
-  directConnect: !process.env.IS_JENKINS,
+  directConnect: false,
   baseUrl: 'https://testing-angular-applications.github.io',
 
   // Jasmine
@@ -44,7 +44,7 @@ exports.config = {
     print: function() {}
   },
   onPrepare: ()=> {
-    if (process.env.IS_JENKINS) {
+    if (true) {
       let jasmineReporters = require('jasmine-reporters');
       let junitReporter = new jasmineReporters.JUnitXmlReporter({
         savePath: 'output/',
