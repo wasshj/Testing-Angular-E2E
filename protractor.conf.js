@@ -4,7 +4,7 @@ exports.config = {
     browserName: 'chrome'  
   },
   baseUrl: 'https://testing-angular-applications.github.io',
-  specs: ['e2e/*.spec.ts'],
+  specs: ['e2e/*.e2e-spec.ts'],
   onPrepare: () => {  
       let jasmineReporters = require('jasmine-reporters');
       let junitReporter = new jasmineReporters.JUnitXmlReporter({
