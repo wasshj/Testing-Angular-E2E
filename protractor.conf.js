@@ -30,7 +30,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      args: (process.env.IS_CIRCLE ? ['--headless'] : [])
+      args: (false ? ['--headless'] : [])
     }
   },
   directConnect: false,
