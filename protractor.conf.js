@@ -1,5 +1,5 @@
 exports.config = {
-  directConnect: false ,
+  directConnect: true ,
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
