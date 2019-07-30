@@ -7,7 +7,7 @@ exports.config = {
     }
   },
   baseUrl: 'https://testing-angular-applications.github.io',
-  specs: ['e2e/**/*.spec.ts'],
+  specs: ['e2e/**/*.e2e-spec.ts'],
   onPrepare: () => {
     if (process.env.IS_JENKINS) {
       let jasmineReporters = require('jasmine-reporters');
