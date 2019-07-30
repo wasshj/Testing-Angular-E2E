@@ -1,23 +1,45 @@
+// Protractor configuration file, see link for more information
+// https://github.com/angular/protractor/blob/master/lib/config.ts
+
+const { SpecReporter } = require('jasmine-spec-reporter');
+
 exports.config = {
-framework: 'jasmine2',
-onPrepare: function() {
-    var jasmineReporters = require('jasmine-reporters');
+  allScriptsTimeout: 11000,
+  specs: [
+    'e2e/**/*.e2e-spec.ts'
+  ],
+  capabilities: {
+    browserName: 'chrome',
+    chromeOptions: {
+      args: (process.env.IS_CIRCLE ? ['--headless'] : [])
+    }
+  },
+  directConnect: !process.env.IS_JENKINS,
+  baseUrl: 'https://testing-angular-applications.github.io',
 
-    // returning the promise makes protractor wait for the reporter config before executing tests
-    return browser.getProcessedConfig().then(function(config) {
-        // you could use other properties here if you want, such as platform and version
-        var browserName = config.capabilities.browserName;
-
-        var junitReporter = new jasmineReporters.JUnitXmlReporter({
-            consolidateAll: false,
-            savePath: 'testresults',
-            modifyReportFileName: function(generatedFileName, suite) {
-                // this will produce distinct file names for each capability,
-                // e.g. 'firefox.SuiteName' and 'chrome.SuiteName'
-                return browserName + '.' + generatedFileName;
-            }
-        });
-        jasmine.getEnv().addReporter(junitReporter);
+  // Jasmine
+  framework: 'jasmine',
+  jasmineNodeOpts: {
+    showColors: true,
+    defaultTimeoutInterval: 30000,
+    print: function() {}
+  },
+  onPrepare: ()=> {
+    if (process.env.IS_JENKINS) {
+      let jasmineReporters = require('jasmine-reporters');
+      let junitReporter = new jasmineReporters.JUnitXmlReporter({
+        savePath: 'output/',
+        consolidateAll: false
+      });
+      jasmine.getEnv().addReporter(junitReporter);
+    } else {
+      let specReporter = new SpecReporter({
+        spec: { displayStacktrace: true }
+      });
+      jasmine.getEnv().addReporter(specReporter);
+    }
+    require('ts-node').register({
+      project: 'e2e/tsconfig.json'
     });
-}
+  }
 };
