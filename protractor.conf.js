@@ -27,7 +27,7 @@ exports.config = {
     jasmine.getEnv().addReporter(specReporter);
 
     const junitReporter = new JUnitXmlReporter({
-      savePath: './e2e/test-results/E2E',
+      savePath: './',
       consolidateAll: false
     });
     jasmine.getEnv().addReporter(junitReporter);
