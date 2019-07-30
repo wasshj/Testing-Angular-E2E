@@ -1,35 +1,42 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
-const { JUnitXmlReporter } = require('jasmine-reporters');
 
 exports.config = {
   allScriptsTimeout: 11000,
-  specs: ['./e2e/**/*.e2e-spec.ts'],
+  specs: [
+    'e2e/**/*.e2e-spec.ts'
+  ],
   capabilities: {
-    browserName: 'chrome'
+    browserName: 'chrome',
+    chromeOptions: {
+      args: (process.env.IS_CIRCLE ? ['--headless'] : [])
+    }
   },
-  directConnect: false,
-  seleniumAddress: 'http://localhost:4444/wd/hub',
+  directConnect: !process.env.IS_JENKINS,
   baseUrl: 'https://testing-angular-applications.github.io',
+
+  // Jasmine
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000,
     print: function() {}
   },
-  onPrepare() {
+  onPrepare: ()=> {
+    if (process.env.IS_JENKINS) {
+      let jasmineReporters = require('jasmine-reporters');
+      let junitReporter = new jasmineReporters.JUnitXmlReporter({
+        savePath: 'output/',
+        consolidateAll: false
+      });
+      jasmine.getEnv().addReporter(junitReporter);
+    } else {
+      let specReporter = new SpecReporter({
+        spec: { displayStacktrace: true }
+      });
+      jasmine.getEnv().addReporter(specReporter);
+    }
     require('ts-node').register({
       project: 'e2e/tsconfig.json'
     });
-
-    const specReporter = new SpecReporter({
-      spec: { displayStacktrace: true }
-    });
-    jasmine.getEnv().addReporter(specReporter);
-
-    const junitReporter = new JUnitXmlReporter({
-      savePath: './',
-      consolidateAll: false
-    });
-    jasmine.getEnv().addReporter(junitReporter);
   }
 };
