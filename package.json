@@ -1,10 +1,6 @@
 {
   "name": "chapter-11-code",
   "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wasshj/testingangularendtoend.git"
-  },
   "scripts": {
     "e2e": "protractor",
     "lint": "tslint",
