@@ -1,42 +1,23 @@
-const { SpecReporter } = require('jasmine-spec-reporter');
-
 exports.config = {
-  allScriptsTimeout: 11000,
-  specs: [
-    'e2e/test-edit.e2e-spec.ts'
-  ],
-  capabilities: {
-    browserName: 'chrome',
-    chromeOptions: {
-      args: (false ? ['--headless'] : [])
-    }
-  },
-  directConnect: false,
-  baseUrl: 'https://testing-angular-applications.github.io',
+framework: 'jasmine2',
+onPrepare: function() {
+    var jasmineReporters = require('jasmine-reporters');
 
-  // Jasmine
-  framework: 'jasmine',
-  jasmineNodeOpts: {
-    showColors: true,
-    defaultTimeoutInterval: 30000,
-    print: function() {}
-  },
-  onPrepare: ()=> {
-    if (true) {
-      let jasmineReporters = require('jasmine-reporters');
-      let junitReporter = new jasmineReporters.JUnitXmlReporter({
-        savePath: 'output/',
-        consolidateAll: false
-      });
-      jasmine.getEnv().addReporter(junitReporter);
-    } else {
-      let specReporter = new SpecReporter({
-        spec: { displayStacktrace: true }
-      });
-      jasmine.getEnv().addReporter(specReporter);
-    }
-    require('ts-node').register({
-      project: 'e2e/tsconfig.json'
+    // returning the promise makes protractor wait for the reporter config before executing tests
+    return browser.getProcessedConfig().then(function(config) {
+        // you could use other properties here if you want, such as platform and version
+        var browserName = config.capabilities.browserName;
+
+        var junitReporter = new jasmineReporters.JUnitXmlReporter({
+            consolidateAll: false,
+            savePath: 'testresults',
+            modifyReportFileName: function(generatedFileName, suite) {
+                // this will produce distinct file names for each capability,
+                // e.g. 'firefox.SuiteName' and 'chrome.SuiteName'
+                return browserName + '.' + generatedFileName;
+            }
+        });
+        jasmine.getEnv().addReporter(junitReporter);
     });
-  }
+}
 };
